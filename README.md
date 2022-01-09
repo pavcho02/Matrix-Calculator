@@ -1,7 +1,7 @@
 # Matrix-Calculator
 Matrix calculator console app
 ### Describtion
-That's my final project for Introduction Into Programming Practicum Course.
+That's my final project for Introduction Into Programming Practicum Course in Faculty of Mathematics and Informatics at Sofia University St. Kliment Ohridski.
 ### Functionalities
 - Matrix Addition
 - Matrix Multiplication with a number
