@@ -53,107 +53,295 @@ void matrixPrint(double** matrix, int rows, int cols)
     }
 }
 
+void deleteMatrix(double** matrix, int rows, int cols)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+}
+
 void additionPrint()
 {
-    cout << "Enter two file names!" << endl;
-    cout << "File name(Matrix A):" << endl;
-    cout << "File name(Matrix B):" << endl;
-    char file1[100];
-    char file2[100];
-    cin.getline(file1, 100);
-    cin.getline(file2, 100);
+    int rowsA;
+    int columnsA;
+    int rowsB;
+    int columnsB;
+    cout << "Enter two matrices!" << endl;
+    cout << "Enter number of rows of Matrix A = ";    
+    cin >> rowsA;
+    cout << endl << "Enter number of columns of Matrix A = ";
+    cin >> columnsA;
+    cout << endl << "Enter Matrix A:" << endl;
+    double** matrixA = new double*[rowsA];
+    for (int i = 0; i < rowsA; i++)
+    {
+        matrixA[i] = new double[columnsA];
+    }
+    for (int i = 0; i < rowsA; i++)
+    {
+        for (int j = 0; j < columnsA; j++)
+        {
+            cin >> matrixA[i][j];
+        }
+    }
+    cout << "Enter number of rows of Matrix B = ";
+    cin >> rowsB;
+    cout << endl << "Enter number of columns of Matrix B = ";
+    cin >> columnsB;
+    cout << endl << "Enter Matrix B:" << endl;
+    double** matrixB = new double* [rowsB];
+    for (int i = 0; i < rowsB; i++)
+    {
+        matrixB[i] = new double[columnsB];
+    }
+    for (int i = 0; i < rowsB; i++)
+    {
+        for (int j = 0; j < columnsB; j++)
+        {
+            cin >> matrixB[i][j];
+        }
+    }
+    double** result = sum(matrixA,matrixB, rowsA,columnsA,rowsB,columnsB);
+    if (result == nullptr)
+    {
+        cout << "Matrices must have equal dimensions" << endl;
+        return;
+    }
     cout << "A + B is:" << endl;
+    matrixPrint(result,rowsA,columnsA);
+    
+    deleteMatrix(result, rowsA, columnsA);
+    deleteMatrix(matrixA, rowsA, columnsA);
+    deleteMatrix(matrixB, rowsB, columnsB);
 }
 
 void multiplicationWithNumberPrint()
 {
-    cout << "Enter two file names!" << endl;
-    cout << "File name(Matrix):" << endl;
-    cout << "File name(Number):" << endl;
-    char fileName1[100];
-    char fileName2[100];
-    cin.getline(fileName1, 100);
-    cin.getline(fileName2, 100);
-    cout << "A * x is:" << endl;
-    /*int rows;
+    int rows;
     int columns;
+    double number;
+    cout << "Enter two operands!" << endl;
+    cout << "Enter number of rows of Matrix = ";
+    cin >> rows;
+    cout << endl << "Enter number of columns of Matrix = ";
+    cin >> columns;
+    cout << endl << "Enter Matrix :" << endl;
     double** matrix = new double* [rows];
     for (int i = 0; i < rows; i++)
     {
         matrix[i] = new double[columns];
     }
-    fstream file1;
-    file1.open(fileName1, fstream::in);
-    
-    file1.close();
-    fstream file2;
-    file2.open(fileName2, fstream::in);
-
-    file2.close();
     for (int i = 0; i < rows; i++)
     {
-        delete[] matrix[i];
+        for (int j = 0; j < columns; j++)
+        {
+            cin >> matrix[i][j];
+        }
     }
-    delete[] matrix;*/
+    cout << "Number:" << endl;
+    cin >> number;
+    double** result = multiplicationWithNumber(matrix, rows, columns, number);
+    cout << "A * x is:" << endl;
+    matrixPrint(result, rows, columns);
+
+    deleteMatrix(result, rows, columns);
+    deleteMatrix(matrix, rows, columns);
 }
 
 void multiplicationPrint()
 {
-    cout << "Enter two file names!" << endl;
-    cout << "File name(Matrix A):" << endl;
-    cout << "File name(Matrix B):" << endl;
-    char fileName1[100];
-    char fileName2[100];
-    cin.getline(fileName1, 100);
-    cin.getline(fileName2, 100);
+    int rowsA;
+    int columnsA;
+    int rowsB;
+    int columnsB;
+    cout << "Enter two matrices!" << endl;
+    cout << "Enter number of rows of Matrix A = ";
+    cin >> rowsA;
+    cout << endl << "Enter number of columns of Matrix A = ";
+    cin >> columnsA;
+    cout << endl << "Enter Matrix A:" << endl;
+    double** matrixA = new double* [rowsA];
+    for (int i = 0; i < rowsA; i++)
+    {
+        matrixA[i] = new double[columnsA];
+    }
+    for (int i = 0; i < rowsA; i++)
+    {
+        for (int j = 0; j < columnsA; j++)
+        {
+            cin >> matrixA[i][j];
+        }
+    }
+    cout << "Enter number of rows of Matrix B = ";
+    cin >> rowsB;
+    cout << endl << "Enter number of columns of Matrix B = ";
+    cin >> columnsB;
+    cout << endl << "Enter Matrix B:" << endl;
+    double** matrixB = new double* [rowsB];
+    for (int i = 0; i < rowsB; i++)
+    {
+        matrixB[i] = new double[columnsB];
+    }
+    for (int i = 0; i < rowsB; i++)
+    {
+        for (int j = 0; j < columnsB; j++)
+        {
+            cin >> matrixB[i][j];
+        }
+    }
+    double** result = multiplication(matrixA, matrixB, rowsA, columnsA, rowsB, columnsB);
+    if (result == nullptr)
+    {
+        cout << "Columns of matrix A must equal rows of matrix B!" << endl;
+        return;
+    }
     cout << "A * B is:" << endl;
+    matrixPrint(result, rowsA, columnsB);
+
+    deleteMatrix(result, rowsA, columnsB);
+    deleteMatrix(matrixA, rowsA, columnsA);
+    deleteMatrix(matrixB, rowsB, columnsB);
 }
 
 void devisionWithNumberPrint()
 {
-    cout << "Enter two file names!" << endl;
-    cout << "File name(Matrix):" << endl;
-    cout << "File name(Number):" << endl;
-    char fileName1[100];
-    char fileName2[100];
-    cin.getline(fileName1, 100);
-    cin.getline(fileName2, 100);
+    int rows;
+    int columns;
+    double number;
+    cout << "Enter two operands!" << endl;
+    cout << "Enter number of rows of Matrix = ";
+    cin >> rows;
+    cout << endl << "Enter number of columns of Matrix = ";
+    cin >> columns;
+    cout << endl << "Enter Matrix :" << endl;
+    double** matrix = new double* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[columns];
+    }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            cin >> matrix[i][j];
+        }
+    }
+    cout << "Number:" << endl;
+    cin >> number;
+    double** result = devisionWithNumber(matrix, rows, columns, number);
+    if (result == nullptr)
+    {
+        cout << "Cannot devide by 0!" << endl;
+        return;
+    }
     cout << "A / x is:" << endl;
+    matrixPrint(result, rows, columns);
+
+    deleteMatrix(result, rows, columns);
+    deleteMatrix(matrix, rows, columns);
 }
 
 void determinantPrint()
 {
-    cout << "Enter file name!" << endl;
-    cout << "File name(Matrix):" << endl;
-    char fileName[100];
-    cin.getline(fileName, 100);
-    cout << "detA is:" << endl;
-    //if (det() == -1)
+    int rows;
+    int columns;
+    cout << "Enter a matrix!" << endl;
+    cout << "Enter number of rows of Matrix = ";
+    cin >> rows;
+    cout << endl << "Enter number of columns of Matrix = ";
+    cin >> columns;
+    cout << endl << "Enter Matrix :" << endl;
+    double** matrix = new double* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[columns];
+    }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            cin >> matrix[i][j];
+        }
+    }
+    if (rows != columns)
     {
         cout << "Only square matrices have a determinant!";
         return;
     }
+    double result = det(matrix, rows);
+    cout << "detA is: " << result << endl;
+
+    deleteMatrix(matrix, rows, columns);
 }
 
 void transposePrint()
 {
-    cout << "Enter file name!" << endl;
-    cout << "File name(Matrix):" << endl;
-    char fileName[100];
-    cin.getline(fileName, 100);
+    int rows;
+    int columns;
+    cout << "Enter a matrix!" << endl;
+    cout << "Enter number of rows of Matrix = ";
+    cin >> rows;
+    cout << endl << "Enter number of columns of Matrix = ";
+    cin >> columns;
+    cout << endl << "Enter Matrix :" << endl;
+    double** matrix = new double* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[columns];
+    }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            cin >> matrix[i][j];
+        }
+    }
+    double** result = transpone(matrix, rows, columns);
     cout << "The transpose matrix is:" << endl;
+    matrixPrint(result, columns, rows);    
+
+    deleteMatrix(result, columns, rows);
+    deleteMatrix(matrix, rows, columns);
 }
 
 void inversePrint()
-{
-    cout << "Enter file name!" << endl;
-    cout << "File name(Matrix):" << endl;
-    char fileName[100];
-    cin.getline(fileName, 100);
-    cout << "The inverse matrix is:" << endl;
-    if (det() == 0)
+{     
+    int rows;
+    int columns;
+    cout << "Enter a matrix!" << endl;
+    cout << "Enter number of rows of Matrix = ";
+    cin >> rows;
+    cout << endl << "Enter number of columns of Matrix = ";
+    cin >> columns;
+    cout << endl << "Enter Matrix :" << endl;
+    double** matrix = new double* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        matrix[i] = new double[columns];
+    }
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            cin >> matrix[i][j];
+        }
+    }
+    if (rows != columns)
+    {
+        cout << "Only square matrices have inverse matrix!";
+        return;
+    }
+    if (det(matrix, rows) == 0)
     {
         cout << "There is no inverse matrix!";
         return;
     }
+    double** result = inverse(matrix, rows);   
+    cout << "The inverse matrix is:" << endl;
+    matrixPrint(result, rows, columns);
+
+    deleteMatrix(result, rows, columns);
+    deleteMatrix(matrix, rows, columns);
 }

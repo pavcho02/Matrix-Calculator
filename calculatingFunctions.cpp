@@ -1,15 +1,21 @@
 #include "calculatingFunctions.h"
 
-double** sum(double** matrixA, double** matrixB, int rows, int cols)
+double** sum(double** matrixA, double** matrixB, int rowsA, int colsA, int rowsB, int colsB)
 {
+    int cols = colsA;
+    int rows = rowsA;
+    if (colsA != colsB && rowsA != rowsB)
+    {
+        return nullptr;
+    }
     double** result = new double* [rows];
     for (int i = 0; i < rows; i++)
     {
-        result[i] = new double[cols];
+        result[i] = new double[rows];
     }
     for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (int j = 0; j < rows; j++)
         {
             result[i][j] = matrixA[i][j] + matrixB[i][j];
         }
@@ -37,13 +43,13 @@ double** multiplicationWithNumber(double** matrixA, int rows, int cols, int numb
 double** transpone(double** matrixA, int rows, int cols)
 {
     double** result = new double* [rows];
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < cols; i++)
     {
-        result[i] = new double[cols];
+        result[i] = new double[rows];
     }
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < cols; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (int j = 0; j < rows; j++)
         {
             result[i][j] = matrixA[j][i];
         }
@@ -53,6 +59,10 @@ double** transpone(double** matrixA, int rows, int cols)
 
 double** devisionWithNumber(double** matrixA, int rows, int cols, int number)
 {
+    if (number == 0)
+    {
+        return nullptr;
+    }
     double** result = new double* [rows];
     for (int i = 0; i < rows; i++)
     {
@@ -68,37 +78,99 @@ double** devisionWithNumber(double** matrixA, int rows, int cols, int number)
     return result;
 }
 
-double det(double** matrixA, int rows, int cols)
+void adQuantity(double** matrix, double** used, int size, int row, int column)
 {
-    if (cols != rows || rows > 4 || cols > 4)
+    int indexI = 0, indexJ = 0;
+    for (int i = 0; i < size; i++) 
     {
-        return -1;
+        for (int j = 0; j < size; j++) 
+        {
+            if (i != row && j != column) 
+            {
+                used[indexI][indexJ++] = matrix[i][j];
+                if (indexJ == size - 1) 
+                {
+                    indexJ = 0;
+                    indexI++;
+                }
+            }
+        }
     }
-    double det = 0;
-    if (rows == 1)
-    {
-        det = matrixA[0][0];
-    }
-    if (rows == 2)
-    {
-        det = matrixA[0][0] * matrixA[1][1] - matrixA[1][0] * matrixA[0][1];
-    }
-    if (rows == 3)
-    {
-        det = matrixA[0][0] * matrixA[1][1] * matrixA[2][2] + matrixA[0][1] * matrixA[1][2] * matrixA[2][0] + matrixA[0][2] * matrixA[1][0] * matrixA[2][1] - matrixA[0][2] * matrixA[1][2] * matrixA[2][0];
-    }
-    if (rows == 4)
-    {
-        det = matrixA[0][0] * matrixA[1][1] - matrixA[1][0] * matrixA[0][1];
-    }
-    
-    return det;
+
 }
 
-double** inverse(double** matrixA, int rows, int cols)
+double det(double** matrix, int size)
 {
-    if(det(matrixA,rows,cols)==0)
-    return nullptr;
+    double determinant = 0;
+    int sign = 1;
+    if (size == 1)
+    {
+        return matrix[0][0];
+    }
+    double** result = new double* [size];
+    for (int i = 0; i < size; i++)
+    {
+        result[i] = new double[size];
+    }
+    for (int i = 0; i < size; i++)
+    {
+        adQuantity(matrix, result, size, 0, i);
+        determinant += sign * matrix[0][i] * det(result, size - 1);
+        sign = -sign;
+    }
+    return determinant;
+}
+
+void adjustable(double** matrix, double** adj, int size)
+{
+    if (size == 1) {
+        adj[0][0] = 1;
+        return;
+    }
+    int sign = 1;
+    double** used = new double* [size];
+    for (int i = 0; i < size; i++)
+    {
+        used[i] = new double[size];
+    }
+    for (int i = 0; i < size; i++) 
+    {
+        for (int j = 0; j < size; j++) 
+        {
+            adQuantity(matrix, used, i, j, size);
+            if ((i + j) % 2 == 0) 
+            {
+                sign = 1;
+            }
+            else 
+            {
+                sign = -1;
+            }
+            adj[i][j] = sign * det(used, size - 1);
+        }
+    }
+}
+
+double** inverse(double** matrix, int size)
+{
+    double** result = new double* [size];
+    for (int i = 0; i < size; i++)
+    {
+        result[i] = new double[size];
+    }
+    double determinant = det(matrix, size);
+    double** adj = new double* [size];
+    for (int i = 0; i < size; i++)
+    {
+        adj[i] = new double[size];
+    }
+    adjustable(matrix, adj, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            result[i][j] = adj[i][j] / determinant;
+        }
+    }
+    return result;
 }
 
 double** multiplication(double** matrixA, double** matrixB, int rowsA, int colsA, int rowsB, int colsB)
@@ -116,9 +188,9 @@ double** multiplication(double** matrixA, double** matrixB, int rowsA, int colsA
     {
         for (int j = 0; j < colsB; j++)
         {
+            result[i][j] = 0;
             for (int k = 0; k < colsA; k++)
             {
-                result[i][j] = 0;
                 result[i][j] += matrixA[i][k] * matrixB[k][j];
             }
         }

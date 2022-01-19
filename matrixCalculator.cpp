@@ -41,12 +41,12 @@ int main()
             additionPrint();
         }
         if (operation == 2)
-        {
-            multiplicationWithNumberPrint();
+        {            
+            multiplicationPrint();
         }
         if (operation == 3)
         {
-            multiplicationPrint();
+            multiplicationWithNumberPrint();
         }
         if (operation == 4)
         {
