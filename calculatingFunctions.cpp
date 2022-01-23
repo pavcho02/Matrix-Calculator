@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 11
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2021/2022
+*
+* @author Pavlin Georgiev Georgiev
+* @idnumber 9MI0600106
+* @compiler VC
+*
+* <file with calculating functions>
+*
+*/
+
 #include "calculatingFunctions.h"
 
 double** sum(double** matrixA, double** matrixB, int rowsA, int colsA, int rowsB, int colsB)
@@ -42,7 +57,7 @@ double** multiplicationWithNumber(double** matrixA, int rows, int cols, int numb
 
 double** transpone(double** matrixA, int rows, int cols)
 {
-    double** result = new double* [rows];
+    double** result = new double* [cols];
     for (int i = 0; i < cols; i++)
     {
         result[i] = new double[rows];
@@ -78,7 +93,8 @@ double** devisionWithNumber(double** matrixA, int rows, int cols, int number)
     return result;
 }
 
-void adQuantity(double** matrix, double** used, int size, int row, int column)
+// Function to get cofactor of A[p][q] in used[][]
+void cofactor(double** matrix, double** used, int size, int row, int column)
 {
     int indexI = 0, indexJ = 0;
     for (int i = 0; i < size; i++) 
@@ -114,16 +130,18 @@ double det(double** matrix, int size)
     }
     for (int i = 0; i < size; i++)
     {
-        adQuantity(matrix, result, size, 0, i);
+        cofactor(matrix, result, size, 0, i);
         determinant += sign * matrix[0][i] * det(result, size - 1);
         sign = -sign;
     }
     return determinant;
 }
 
-void adjustable(double** matrix, double** adj, int size)
+
+void adjustable(double** matrix, double** adj, int size) 
 {
-    if (size == 1) {
+    if (size == 1) 
+    {
         adj[0][0] = 1;
         return;
     }
@@ -137,7 +155,7 @@ void adjustable(double** matrix, double** adj, int size)
     {
         for (int j = 0; j < size; j++) 
         {
-            adQuantity(matrix, used, i, j, size);
+            cofactor(matrix, used, i, j, size);
             if ((i + j) % 2 == 0) 
             {
                 sign = 1;
@@ -146,7 +164,7 @@ void adjustable(double** matrix, double** adj, int size)
             {
                 sign = -1;
             }
-            adj[i][j] = sign * det(used, size - 1);
+            adj[j][i] = (sign) * (det(used, size - 1)); //transpose matrix with all adQuantities
         }
     }
 }
@@ -165,9 +183,11 @@ double** inverse(double** matrix, int size)
         adj[i] = new double[size];
     }
     adjustable(matrix, adj, size);
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            result[i][j] = adj[i][j] / determinant;
+    for (int i = 0; i < size; i++) 
+    {
+        for (int j = 0; j < size; j++) 
+        {
+            result[i][j] = adj[i][j]/(determinant);
         }
     }
     return result;

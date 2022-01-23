@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 11
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2021/2022
+*
+* @author Pavlin Georgiev Georgiev
+* @idnumber 9MI0600106
+* @compiler VC
+*
+* <file with print functions>
+*
+*/
+
 #include "printFunctions.h"
 #include "calculatingFunctions.h"
 
@@ -330,7 +345,7 @@ void inversePrint()
     }
     if (rows != columns)
     {
-        cout << "Only square matrices have inverse matrix!";
+        cout << "Only square matrices have inverse matrix!"<<endl;
         return;
     }
     if (det(matrix, rows) == 0)
@@ -338,7 +353,12 @@ void inversePrint()
         cout << "There is no inverse matrix!";
         return;
     }
-    double** result = inverse(matrix, rows);   
+    double** result = new double* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        result[i] = new double[columns];
+    }
+    result = inverse(matrix, rows);   
     cout << "The inverse matrix is:" << endl;
     matrixPrint(result, rows, columns);
 
